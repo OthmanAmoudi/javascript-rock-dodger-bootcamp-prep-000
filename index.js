@@ -53,65 +53,68 @@ var gameInterval = null
      }
    }
  }
-function createRock(x) {
-  const rock = document.createElement('div')
+ function createRock(x) {
+   const rock = document.createElement('div')
 
-  rock.className = 'rock'
-  rock.style.left = `${x}px`
+   rock.className = 'rock'
+   rock.style.left = `${x}px`
 
-  // Hmmm, why would we have used `var` here?
-  var top = 0
+   // Hmmm, why would we have used `var` here?
+   var top = 0
 
-  rock.style.top = top
-  /**
-   * Now that we have a rock, we'll need to append
-   * it to GAME and move it downwards.
-   */
+   rock.style.top = top
+
+   /**
+    * Now that we have a rock, we'll need to append
+    * it to GAME and move it downwards.
+    */
    GAME.appendChild(rock);
-   window.requestAnimationFrame(moveRock)
-  /**
-   * This function moves the rock. (2 pixels at a time
-   * seems like a good pace.)
-   */
+   window.requestAnimationFrame(moveRock);
+   /**
+    * This function moves the rock. (2 pixels at a time
+    * seems like a good pace.)
+    */
+   function moveRock() {
+     // implement me!
+     // (use the comments below to guide you!)
+     /**
+      * If a rock collides with the DODGER,
+      * we should call endGame()
+      */
+      var border = GAME_HEIGHT - 20;
+      var RockNum = positionToInteger(rock.style.top);
+      if (checkCollision(rock)) {
+        return endGame();
+      }else if(RockNum < border){
+     /**
+      * Otherwise, if the rock hasn't reached the bottom of
+      * the GAME, we want to move it again.
+      */
+      rock.style.top = `${RockNum + 2}px`;
+      //console.log(`Top vrednost za --> ${rock.style.top}`);
+      window.requestAnimationFrame(moveRock);
 
-
-  function moveRock() {
-    // implement me!
-    // (use the comments below to guide you!)
-    /**
-     * If a rock collides with the DODGER,
-     * we should call endGame()
-     */
-     var top = 0
-
-     if (checkCollision(rock)){
-       endGame()
+    }else{
+      rock.remove();
+    }
+     /**
+      * But if the rock *has* reached the bottom of the GAME,
+      * we should remove the rock from the DOM
+      */
      }
-    /**
-     * Otherwise, if the rock hasn't reached the bottom of
-     * the GAME, we want to move it again.
-     */
-     if(top < GAME_HEIGHT){
-       window.requestAnimationFrame(moveRock)
-     }
-    /**
-     * But if the rock *has* reached the bottom of the GAME,
-     * we should remove the rock from the DOM
-     */
-     else{
-       rock.remove();
-     }
-  }
 
-  // We should kick of the animation of the rock around here
+   ROCKS.push(rock);
+   // We should kick of the animation of the rock around here
+   //window.requestAnimationFrame(moveRock);
+   // Add the rock to ROCKS so that we can remove all rocks
+   // when there's a collision
 
-  // Add the rock to ROCKS so that we can remove all rocks
-  // when there's a collision
-  ROCKS.push(rock)
+   // Finally, return the rock element you've created
+   return rock
 
-  // Finally, return the rock element you've created
-  return rock
-}
+
+ }
+
 
 /**
  * End the game by clearing `gameInterval`,
